@@ -20,7 +20,7 @@ const logOut = () => {
 
 
 // Export the functions 
-module.exports = {
+ const loginService= {
   logIn,
   logOut
 }
