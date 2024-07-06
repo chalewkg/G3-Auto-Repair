@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function AdminMenu(props) {
   return (
-    <div>
+    <div className='admin-position'>
       <div className='admin-menu'>
         <h2>Admin Menu</h2>
       </div>

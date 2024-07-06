@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-// import loginService from "../../../services/login.service";
 import loginService from "../../../services/login.service";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -15,6 +14,8 @@ function LoginForm() {
   const [serverError, setServerError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const [isLoading, setLoading] = useState(false); // State to manage loading state
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     let valid = true;
@@ -25,6 +26,7 @@ function LoginForm() {
       valid = false;
     } else if (!employee_email.includes("@")) {
       setEmailError("Invalid email format");
+      valid = false;
     } else {
       const regex = /^\S+@\S+\.\S+$/;
       if (!regex.test(employee_email)) {
@@ -46,7 +48,7 @@ function LoginForm() {
     if (!valid) {
       return;
     }
-
+    setLoading(true); // Set loading state to true during form submission
     // Handle form submission
     const formData = {
       employee_email,
@@ -72,6 +74,8 @@ function LoginForm() {
       }
     } catch (err) {
       setServerError("An error has occurred. Please try again later. " + err);
+    } finally {
+      setLoading(false); // Set loading state back to false after form submission
     }
   };
 
