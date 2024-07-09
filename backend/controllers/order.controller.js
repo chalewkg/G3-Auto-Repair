@@ -3,13 +3,15 @@ const orderService = require("../services/order.service");
 const createOrder = async (req, res) => {
   try {
     const orderData = req.body;
-    console.log(orderData);
+    //console.log("in order controller ", orderData);
     const response = await orderService.createOrder(orderData);
-    console.log(response);
+    console.log("response in ordre controller ", response);
     if (response) {
       res.status(200).json({
         message: "Order created successfully",
       });
+
+      console.log("response in ordre controle ", response);
     } else {
       res.status(400).json({
         error: "failed to create order",

@@ -1,5 +1,6 @@
 const { query, withTransaction } = require("../config/db.config");
 const { v4: uuidv4 } = require("uuid");
+const { sendOrderEmail } = require("../utiles/sendOrderEmail");
 
 const createOrder = async (orderData) => {
   try {
@@ -70,6 +71,33 @@ const createOrder = async (orderData) => {
 
       // If everything executed successfully, set success flag to true
       success = true;
+
+      // Introduce a delay (e.g., 10 seconds) before sending email
+      setTimeout(async () => {
+        try {
+          // Retrieve order details immediately after creation
+          const [orderDetails] = await getOrderByID(order_id);
+          console.log("Retrieved order details:", orderDetails);
+
+          // Sending email with retrieved order details
+          if (orderDetails) {
+            const emailSent = await sendOrderEmail(
+              orderDetails,
+              order_id,
+              "Order created successfully"
+            );
+            if (emailSent) {
+              console.log("Email sent successfully");
+            } else {
+              console.log("Failed to send email");
+            }
+          } else {
+            console.log("Failed to retrieve order details for email");
+          }
+        } catch (error) {
+          console.error("Error occurred:", error);
+        }
+      }, 1000); // 10 seconds delay
     });
 
     return success;
@@ -87,15 +115,39 @@ const orderedServices = async (order_id) => {
   return rows;
 };
 
+// const getOrderByID = async (order_id) => {
+//   const sql = `
+//     SELECT o.*, oi.*, os.* FROM orders o LEFT JOIN order_info oi ON o.order_id = oi.order_id
+//     LEFT JOIN order_status os ON o.order_id = os.order_id
+//     WHERE o.order_id = ?
+//   `;
+//   const rows = await query(sql, [order_id]);
+//   console.log(rows);
+//   return rows; // Return the first row or null if no rows found
+// };
+
 const getOrderByID = async (order_id) => {
-  const sql = `
-    SELECT o.*, oi.*, os.* FROM orders o LEFT JOIN order_info oi ON o.order_id = oi.order_id
-    LEFT JOIN order_status os ON o.order_id = os.order_id
-    WHERE o.order_id = ?
-  `;
-  const rows = await query(sql, [order_id]);
-  console.log(rows);
-  return rows; // Return the first row or null if no rows found
+  const sql = `SELECT o.*, oi.*, oss.*, os.*
+    FROM 
+      orders o
+    LEFT JOIN 
+      order_info oi ON o.order_id = oi.order_id
+    LEFT JOIN 
+      order_services oss ON o.order_id = oss.order_id
+    LEFT JOIN 
+      order_status os ON o.order_id = os.order_id
+    WHERE 
+      o.order_id = ?`;
+
+  try {
+    console.log("Executing query:", sql, "with order_id:", order_id);
+    const rows = await query(sql, [order_id]);
+    console.log("Order details:", rows); // Log retrieved rows for debugging
+    return rows; // Return the result of the query
+  } catch (error) {
+    console.error("Error fetching order details:", error);
+    throw error; // Propagate the error to handle it in the caller function
+  }
 };
 
 const getVehicleByOrderId = async (order_id) => {
@@ -280,6 +332,33 @@ const editOrder = async (orderData) => {
         }
       }
       success = true;
+
+      // Introduce a delay (e.g., 10 seconds) before sending email
+      setTimeout(async () => {
+        try {
+          // Retrieve order details immediately after creation
+          const [orderDetails] = await getOrderByID(order_id);
+          console.log("Retrieved order details:", orderDetails);
+
+          // Sending email with retrieved order details
+          if (orderDetails) {
+            const emailSent = await sendOrderEmail(
+              orderDetails,
+              order_id,
+              "Order updated successfully"
+            );
+            if (emailSent) {
+              console.log("Email sent successfully");
+            } else {
+              console.log("Failed to send email");
+            }
+          } else {
+            console.log("Failed to retrieve order details for email");
+          }
+        } catch (error) {
+          console.error("Error occurred:", error);
+        }
+      }, 1000); // 10 seconds delay
     });
     return success; // Return true if everything is successful
   } catch (error) {
@@ -335,6 +414,33 @@ const updateOrderProgress = async (order_id, orderData) => {
           "Failed to update additional_requests_completed in order_info table"
         );
       }
+
+      // Introduce a delay (e.g., 10 seconds) before sending email
+      setTimeout(async () => {
+        try {
+          // Retrieve order details immediately after creation
+          const [orderDetails] = await getOrderByID(order_id);
+          console.log("Retrieved order details:", orderDetails);
+
+          // Sending email with retrieved order details
+          if (orderDetails) {
+            const emailSent = await sendOrderEmail(
+              orderDetails,
+              order_id,
+              "Order updated successfully"
+            );
+            if (emailSent) {
+              console.log("Email sent successfully");
+            } else {
+              console.log("Failed to send email");
+            }
+          } else {
+            console.log("Failed to retrieve order details for email");
+          }
+        } catch (error) {
+          console.error("Error occurred:", error);
+        }
+      }, 1000); // 10 seconds delay
     });
 
     return { message: "Order progress updated successfully" };

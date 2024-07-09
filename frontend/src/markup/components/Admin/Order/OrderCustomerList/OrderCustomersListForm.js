@@ -7,7 +7,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { GiClick } from "react-icons/gi";
 import AddCustomerForm from "../../Customer/AddCustomers/AddCustomerForm";
 
-
 const OrderCustomersListForm = () => {
   const [customers, setCustomers] = useState([]);
   const [query, setQuery] = useState("");
@@ -21,7 +20,7 @@ const OrderCustomersListForm = () => {
   if (employee) {
     token = employee.employee_token;
   }
-  console.log(token);
+  // console.log(token);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -29,7 +28,7 @@ const OrderCustomersListForm = () => {
         const response = await customerService.getAllCustomer(token);
         const data = response.data;
 
-        console.log(data);
+        // console.log(data);
         if (data.data.length !== 0) {
           setCustomers(data.data);
         }
@@ -73,31 +72,31 @@ const OrderCustomersListForm = () => {
     if (searchQuery === "") {
       setCustomers([]);
       // set it back to customers
-     setCustomers(customers);
+      setCustomers(customers);
     }
   };
 
   return (
     <>
       {apiError ? (
-        <section className="contact-section">
-          <div className="auto-container">
-            <div className="contact-title">
+        <section className='contact-section'>
+          <div className='auto-container'>
+            <div className='contact-title'>
               <h2>{apiErrorMessage}</h2>
             </div>
           </div>
         </section>
       ) : (
         <>
-          <section className="contact-section">
-            <div className="auto-container">
-              <div className="contact-title">
+          <section className='contact-section'>
+            <div className='auto-container'>
+              <div className='contact-title'>
                 <h2>Create a new order</h2>
                 <div>
                   <input
-                    type="text"
-                    placeholder="Search by first name, last name, email, or phone number"
-                    className="search"
+                    type='text'
+                    placeholder='Search by first name, last name, email, or phone number'
+                    className='search'
                     value={query}
                     onChange={handleSearch}
                   />
@@ -123,10 +122,9 @@ const OrderCustomersListForm = () => {
                         <td>{data.customer_email}</td>
                         <td>{data.customer_phone_number}</td>
                         <td>
-                          <div className="edit-delete-icons">
+                          <div className='edit-delete-icons'>
                             <Link
-                              to={`/admin/order/new-order/customer/${data.customer_id}`}
-                            >
+                              to={`/admin/order/new-order/customer/${data.customer_id}`}>
                               <GiClick />
                             </Link>
                           </div>
@@ -138,11 +136,10 @@ const OrderCustomersListForm = () => {
               ) : (
                 <>
                   {query !== "" && <div>No search results found.</div>}
-                  <div className="form-group col-md-12">
+                  <div className='form-group col-md-12'>
                     <Button
-                      className="theme-btn btn-style-one"
-                      onClick={toggleAddCustomerForm}
-                    >
+                      className='theme-btn btn-style-one'
+                      onClick={toggleAddCustomerForm}>
                       Add Customer
                     </Button>
                   </div>

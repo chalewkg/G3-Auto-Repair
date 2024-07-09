@@ -22,6 +22,7 @@ const getAllServices = async (token) => {
 };
 
 const createOrder = async (orderData, loggedInEmployeeToken) => {
+  console.log(orderData);
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -35,6 +36,7 @@ const createOrder = async (orderData, loggedInEmployeeToken) => {
       orderData,
       config
     );
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.log(error.response.data.message);
