@@ -9,6 +9,7 @@ import OrderStatusDropdown from "../../../markup/components/Admin/Order/OrderLis
 import { useAuth } from "../../../Contexts/AuthContext";
 import { getStatusClass, orderStatusLabels } from "../../../util/statusUtils";
 import { add } from "date-fns";
+import UnauthorizedPage from "../../pages/404";
 
 function OrderDetails() {
   const [singleOrder, setSingleOrder] = useState({});
@@ -100,6 +101,14 @@ function OrderDetails() {
   // console.log(order.order_id);
 
   // console.log(services);
+
+  // Compare orderHash from params with singleOrder.orderHash
+  const isHashMatch = orderHash === order.order_hash;
+
+  // Render UnauthorizedPage if orderHash is present and doesn't match
+  if (orderHash && !isHashMatch) {
+    return <UnauthorizedPage />;
+  }
 
   return (
     <section className='contact-section'>
