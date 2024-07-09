@@ -30,8 +30,8 @@ const sendOrderEmail = async (orderDetails, order_id, message) => {
       port: 587,
       secure: false,
       auth: {
-        user: "G3autorepair@yahoo.com",
-        pass: "ixkylyhnqqkzlqnr",
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
       logger: true,
       debug: true,
